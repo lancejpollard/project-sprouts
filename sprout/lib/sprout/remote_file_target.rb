@@ -60,13 +60,13 @@ module Sprout
       # Wanted to raise, but it seems we support RemoteFileTargets that are actually self-installed binaries...
       # like SWFMill on Linux. @see the BuilderTest.test_build_no_install for more info.
       # raise RemoteFileTargetError.new('Cannot retrieve a RemoteFileTarget without a url') if url.nil?
-      return if url.nil?
+      puts "RESOLVE: environment_path = " + environment_path.to_s
+      # If we have specified an environment path, then we don't need to download it
+      return if (url.nil? || environment_path)
       
-      if(filename)
-        self.downloaded_path = File.join(File.dirname(downloaded_path), filename)
-      end
+      self.downloaded_path = File.join(File.dirname(downloaded_path), filename) unless filename.nil?
       
-      if(url && (update || !File.exists?(downloaded_path)))
+      if (url && (update || !File.exists?(downloaded_path)))
         content = download(url, update)
         FileUtils.makedirs(File.dirname(downloaded_path))
         FileUtils.touch(downloaded_path)
@@ -75,7 +75,7 @@ module Sprout
         end
       end
 
-      if(!File.exists?(installed_path) || !File.exists?(File.join(installed_path, archive_path) ))
+      if (!File.exists?(installed_path) || !File.exists?(File.join(installed_path, archive_path) ))
         archive_root = File.join(install_path, 'archive')
         install(downloaded_path, archive_root, update, archive_type)
       end
@@ -108,19 +108,19 @@ module Sprout
     # Will strip off any ? arguments and trailing slashes. May not play nice with Rails URLS,
     # We expect archive file name suffixes like, zip, gzip, tar.gz, dmg, etc.
     def file_name(url=nil)
-      return @filename if(@filename)
+      return @filename if !@filename.nil?
 
       url ||= self.url
       url = url.split('?').shift
       
       parts = url.split('/')
-      if(parts.last == '/')
+      if (parts.last == '/')
         parts.pop
       end
       
       file = parts.pop
       
-      if(!archive_type.nil? && file.match(/\.#{archive_type.to_s}$/).nil?)
+      if (!archive_type.nil? && file.match(/\.#{archive_type.to_s}$/).nil?)
         file << ".#{archive_type.to_s}"
       end
       
@@ -130,11 +130,15 @@ module Sprout
     private
     
     def inferred_installed_path
-      if(!environment.nil? && !ENV[environment].nil? && File.exists?(ENV[environment]))
+      return environment_path.nil? ? File.join(install_path, 'archive') : environment_path
+    end
+    
+    # If the user has specified an environment path where the file/directory
+    # already exists, then we don't need to download it
+    def environment_path
+      if (!environment.nil? && !ENV[environment].nil? && File.exists?(ENV[environment]))
         return ENV[environment]
       end
-      
-      return File.join(install_path, 'archive')
     end
     
     def download(url, update=false)

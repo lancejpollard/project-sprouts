@@ -21,10 +21,10 @@ DESCRIPTION             = "Sprouts take the tedium and frustration out of creati
 HOMEPATH                = "http://#{PROJECT}.rubyforge.org"
 RELEASE_TYPES           = ["gem"]
 PKG_LIST                = FileList['[a-zA-Z]*',
-                                  'samples/**/*',
-                                  'bin/**/*',
-                                  'lib/**/*',
-                                  'doc/*'
+                                    'samples/**/*',
+                                    'bin/**/*',
+                                    'lib/**/*',
+                                    'doc/*'
                                   ]
 PKG_LIST.exclude('.svn')
 PKG_LIST.exclude('artifacts')
@@ -129,6 +129,11 @@ end
 
 task :package do
   fix_x86_mswin
+end
+
+desc "Install the gem locally"
+task :install => [:package] do
+  sh %{sudo gem install pkg/sprout-#{GEM_VERSION}}
 end
 
 #task :release => :release_rubyforge

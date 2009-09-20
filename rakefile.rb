@@ -2,20 +2,25 @@ require 'rubygems'
 require 'rake/clean'
 require 'rake/rdoctask'
 
-PROJECT_NAME = 'sprout'
-ARTIFACTS = File.expand_path(ENV['CC_BUILD_ARTIFACTS'] || 'pkg')
-PROJECTS = ['tools/flashplayer',
-            'tools/flex2sdk',
-            'tools/flex3sdk',
-            'tools/mtasc',
-            'tools/swfmill',
-            'bundles/developer',
-            'bundles/as2', 
-            'bundles/as3',
-            'bundles/flashplayer',
-            'libraries',
-            'sprout'
-            ]
+FLEX_BUILDER                 = File.expand_path("~/Applications/Flex\ Builder\ 3")
+ENV["SPROUT_FLEX_2_SDK"]     = File.join(FLEX_BUILDER, "sdks/2.0.1")
+ENV["SPROUT_FLEX_3_SDK"]     = File.join(FLEX_BUILDER, "sdks/3.2.0")
+ENV["SPROUT_FLEX_4_SDK"]     = File.expand_path("~/Documents/Development/git/flex/viatropos/trunk")
+ENV["SPROUT_HOME"]           = File.dirname(File.expand_path(__FILE__))
+PROJECT_NAME                 = 'sprout'
+ARTIFACTS                    = File.expand_path(ENV['CC_BUILD_ARTIFACTS'] || 'pkg')
+PROJECTS                     = ['tools/flashplayer',
+                                'tools/flex2sdk',
+                                'tools/flex3sdk',
+                                'tools/mtasc',
+                                'tools/swfmill',
+                                'bundles/developer',
+                                'bundles/as2', 
+                                'bundles/as3',
+                                'bundles/flashplayer',
+                                'libraries',
+                                'sprout'
+                                ]
 
 if(File.basename(ARTIFACTS) == 'pkg')
   CLEAN.add(ARTIFACTS)

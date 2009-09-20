@@ -14,7 +14,7 @@ h3. Installation
 # "Install RubyGems":http://rubyforge.org/frs/?group_id=126
 # Install the Sprout gem:
 
-<code><pre>gem install sprout</pre></code>
+<pre><code>gem install sprout</code></pre>
 _(If prompted, select the appropriate gem for your platform.)_
 
 h3. Getting Started
