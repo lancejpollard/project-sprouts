@@ -108,7 +108,7 @@ h3. Some Links
 * "See the Documentation":http://projectsprouts.org/rdoc
 * "Meet the Community":http://groups.google.com/group/projectsprouts
 
-h3. Local Gem Installation
+h3. Local Gem Installation (and Flex 4 Project)
 
 Assuming you have a local gem environment setup:
 
@@ -116,9 +116,10 @@ Assuming you have a local gem environment setup:
 git clone git://github.com/lukebayes/project-sprouts.git
 cd project-sprouts
 rake install:sprout
+rake install:flex4sdk
 </code></pre>
 
-Then add this to the bottom of your ~/.bash_profile file:
+Then add this to the bottom of your ~/.bash_profile file (ENV variables):
 
 <pre><code>
 # -- start ProjectSprouts config -- #
@@ -128,6 +129,16 @@ export SPROUT_FLEX_4_SDK="/Applications/Adobe\ Flex\ Builder\ 3/sdks/4.0.0" # sa
 export SPROUT_HOME="/path/to/project-sprouts"
 # -- end ProjectSprouts config -- #
 </code></pre>
+
+Then generate a sample Flex 4 project and compile:
+
+<pre><code>
+sprout -n flex4 Flex4Project
+cd Flex4Project
+rake debug
+</code></pre>
+
+Assuming you have your ENV variables set, it should find your sdk and compile your app!
 
 This allows you to use your existing Flex SDKs, and to easily contribute to the ProjectSprouts project.
 
