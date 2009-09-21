@@ -11,10 +11,16 @@ gem_wrap name do |t|
   t.summary       = ""
   # Your name
   t.author        = ''
+  # t.authors = ["author1", "author2"]
+  # t.autorequire = "rake"
   # Your email or - better yet - the address of your project email list
   t.email         = 'projectsprouts@googlegroups.com'
   # The homepage of your library
   t.homepage      = ''
+  t.description = <<-EOF
+    The #{name} Actionscript Library
+  EOF
+  # t.email = ['jack@example.com', 'jill@example.com'] # or just "jack@example.com"
   # Any gem dependencies that your library requires
   # (Go easy here, 99 out of 100 libraries should not
   # need this)

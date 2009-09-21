@@ -28,9 +28,8 @@ module Sprout # :nodoc:
         configure_mxmlc t
         configure_mxmlc_application t
         yield t if block_given?
+        define_player t
       end
-
-      define_player
       
       outer_task.prerequisites << output
       outer_task.prerequisites << player_task_name

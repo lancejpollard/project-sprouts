@@ -62,6 +62,23 @@ module Sprout
   #
   class MXMLCTask < ToolTask
     
+    # If you want to trace the output from a Rakefile, use this as a block
+    #
+    # Its signature is:
+    # trace do |player, line|
+    #   # handle line and player
+    #   if line.match("something")
+    #     player.close
+    #   else
+    #     puts line
+    #   end
+    # end
+    attr_accessor :trace_output
+    
+    def trace(to = nil, &block)
+      @trace_output = block if block_given?
+    end
+    
     # Use a running instance of the FCSH command shell to speed up compilation.
     # You need to run 'rake fcsh:start' in another terminal before turning on 
     # this flag and compiling.
@@ -480,7 +497,7 @@ EOF
       add_param(:namespace, :string) do |p|
         p.delimiter = ' ' 
         p.description = "Adds component manifest to flex project." 
-      end 
+      end
       
       add_param(:namespaces_namespace, :string) do |p|
         p.description =<<EOF

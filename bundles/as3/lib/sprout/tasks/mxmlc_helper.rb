@@ -96,12 +96,15 @@ module Sprout # :nodoc:
       end
     end
     
-    def define_player
+    def define_player(compiler = nil)
       if model.use_fdb
         define_fdb
       else
         flashplayer player_task_name do |t|
           t.swf = output_file
+          if !(compiler.nil? and !compiler.trace_output.nil?)
+            t.trace_output = compiler.trace_output
+          end
         end
       end
     end

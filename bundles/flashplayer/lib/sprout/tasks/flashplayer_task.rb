@@ -61,6 +61,23 @@ module Sprout
 
     @@home = nil
     @@trust = nil
+    
+    # If you want to trace the output from a Rakefile, use this as a block
+    #
+    # Its signature is:
+    # trace do |player, line|
+    #   # handle line and player
+    #   if line.match("something")
+    #     player.close
+    #   else
+    #     puts line
+    #   end
+    # end
+    attr_accessor :trace_output
+    
+    def trace(to=nil, &block)
+      @trace_output = block if block_given?
+    end
 
     def initialize(task_name, app)
       super(task_name, app)
@@ -78,7 +95,7 @@ module Sprout
     
     # Local system path to the Flash Player Trust file
     def FlashPlayerTask.trust
-      if(@@trust)
+      if (@@trust)
         return @@trust
       end
       @@trust = File.join(FlashPlayerTask.home, '#Security', 'FlashPlayerTrust', 'sprout.cfg')
@@ -87,17 +104,17 @@ module Sprout
 
     # Local system path to where the Flash Player stores trace output logs and trust files
     def FlashPlayerTask.home
-      if(@@home)
+      if (@@home)
         return @@home
       end
 
       FlashPlayerTask.home_paths.each do |path|
-        if(File.exists?(path))
+        if (File.exists?(path))
           return @@home = path
         end
       end
 
-      if(@@home.nil?)
+      if (@@home.nil?)
         raise FlashPlayerError.new('FlashPlayer unable to find home folder for your platform')
       end
       return @@home
@@ -130,9 +147,9 @@ module Sprout
 
     def swf
       @swf ||= nil
-      if(@swf.nil?)
+      if (@swf.nil?)
         prerequisites.each do |req|
-          if(req.index('.swf'))
+          if (req.index('.swf'))
             @swf = req.to_s
             break
           end
@@ -220,7 +237,7 @@ module Sprout
         log_file = FlashPlayerConfig.new().log
         FlashPlayerTrust.new(File.expand_path(File.dirname(swf)))
 
-        if(File.exists?(log_file))
+        if (File.exists?(log_file))
           File.open(log_file, 'w') do |f|
             f.write('')
           end
@@ -247,7 +264,7 @@ module Sprout
       command = "#{target} #{User.clean_path(swf)}"
 
       usr = User.new()
-      if(usr.is_a?(WinUser) && !usr.is_a?(CygwinUser))
+      if (usr.is_a?(WinUser) && !usr.is_a?(CygwinUser))
         return Thread.new {
             system command
         }
@@ -267,9 +284,9 @@ module Sprout
     
     def close
       usr = User.new
-      if(usr.is_a?(WinUser))
+      if (usr.is_a?(WinUser))
         Thread.kill(@thread)
-      elsif(usr.is_a?(OSXUser))
+      elsif (usr.is_a?(OSXUser))
         @clix_player.kill unless @clix_player.nil?
       else
         Process.kill("SIGALRM", @player_pid)
@@ -279,7 +296,7 @@ module Sprout
     def read_log(thread, log_file)
       lines_put = 0
 
-      if(!File.exists?(log_file))
+      if (!File.exists?(log_file))
         raise FlashPlayerError.new('[ERROR] Unable to find the trace output log file in the expected location: ' + log_file)
       end
 
@@ -290,9 +307,13 @@ module Sprout
         File.open(log_file, 'r') do |file|
           file.readlines.each do |line|
             lines_read = lines_read + 1
-            if(lines_read > lines_put)
-              if(!parse_test_result(line, thread))
-                puts "[trace] #{line}"
+            if (lines_read > lines_put)
+              if (!parse_test_result(line, thread))
+                if @trace_output.nil?
+                  puts "[trace] #{line}"
+                else
+                  @trace_output.call(self, line)
+                end
               end
               $stdout.flush
               lines_put = lines_put + 1
@@ -304,8 +325,8 @@ module Sprout
 
     # Returns true if inside of a test result
     def parse_test_result(line, thread)
-      if(@inside_test_result)
-        if(line.index(@@test_result_post_delimiter))
+      if (@inside_test_result)
+        if (line.index(@@test_result_post_delimiter))
           @inside_test_result = false
           write_test_result(test_result)
           close
@@ -316,7 +337,7 @@ module Sprout
         end
       end
 
-      if(line.index(@@test_result_pre_delimiter))
+      if (line.index(@@test_result_pre_delimiter))
         @inside_test_result = true
       end
       
@@ -351,7 +372,7 @@ module Sprout
         failures << element.text
       end
 
-      if(failures.size > 0)
+      if (failures.size > 0)
         raise AssertionFailure.new("[ERROR] Test Failures Encountered \n#{failures.join("\n")}")
       end
     end
@@ -367,24 +388,24 @@ module Sprout
 
     def initialize
       osx_fp9 = File.join(User.library, 'Application Support', 'Macromedia')
-      if(FlashPlayerTask.home == osx_fp9)
+      if (FlashPlayerTask.home == osx_fp9)
         @config = File.join(osx_fp9, @@file_name)
       else
         @config = File.join(User.home, @@file_name)
       end
       
-      if(!File.exists?(@config))
+      if (!File.exists?(@config))
         write_config(@config, content)
       end
     end
 
     def log
       path = File.join(FlashPlayerTask.home, 'Logs', 'flashlog.txt')
-      if(User.new().is_a?(CygwinUser))
+      if (User.new().is_a?(CygwinUser))
         parts = path.split("/")
         parts.shift()
         part = parts.shift() # shift cygdrive
-        if(part != 'cygdrive')
+        if (part != 'cygdrive')
           Log.puts "[WARNING] There may have been a problem writing mm.cfg, please check the path in #{@config} and make sure it's a windows path..."
           return path
         end
@@ -416,7 +437,7 @@ Would you like this file created automatically? [Yn]
 
 EOF
       answer = $stdin.gets.chomp.downcase
-      if(answer == 'y' || answer == '')
+      if (answer == 'y' || answer == '')
         File.open(location, 'w') do |f|
           f.write(content)
         end
@@ -434,17 +455,17 @@ EOF
 
     def initialize(path)
       trust_file = FlashPlayerTask.trust
-      if(!File.exists?(trust_file))
+      if (!File.exists?(trust_file))
        FileUtils.mkdir_p(File.dirname(trust_file))
        FileUtils.touch(trust_file)
       end
 
       parts = path.split(File::SEPARATOR)
-      if(parts.size == 1)
+      if (parts.size == 1)
         path = File::SEPARATOR + path
       end
 
-      if(!has_path?(trust_file, path))
+      if (!has_path?(trust_file, path))
         File.open(trust_file, 'a') do |f|
           f.puts path
         end

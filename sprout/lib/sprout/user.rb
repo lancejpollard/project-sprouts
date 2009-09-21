@@ -205,7 +205,8 @@ module Sprout
     # and returns the result and throws if the process
     # writes to stderr
     def execute(tool, options='')
-      Log.puts(">> Execute: #{File.basename(tool)} #{options}")
+      formatted_options = options.gsub(/(-[^\s*]+[^-]+)/, "\\1\n")
+      Log.puts(">> Execute: #{File.basename(tool)}\n#{formatted_options}")
       tool = clean_path(tool)
       runner = get_process_runner("#{tool} #{options}")
 
