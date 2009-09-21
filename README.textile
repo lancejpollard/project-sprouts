@@ -17,6 +17,8 @@ h3. Installation
 <pre><code>gem install sprout</code></pre>
 _(If prompted, select the appropriate gem for your platform.)_
 
+Instructions for the more advanced local installation are below.
+
 h3. Getting Started
 
 Open a terminal and enter the following commands:
@@ -105,6 +107,29 @@ h3. Some Links
 * "File a Bug":http://github.com/lukebayes/project-sprouts/issues
 * "See the Documentation":http://projectsprouts.org/rdoc
 * "Meet the Community":http://groups.google.com/group/projectsprouts
+
+h3. Local Gem Installation
+
+Assuming you have a local gem environment setup:
+
+<pre><code>
+git clone git://github.com/lukebayes/project-sprouts.git
+cd project-sprouts
+rake install:sprout
+</code></pre>
+
+Then add this to the bottom of your ~/.bash_profile file:
+
+<pre><code>
+# -- start ProjectSprouts config -- #
+export SPROUT_FLEX_2_SDK="/Applications/Adobe\ Flex\ Builder\ 3/sdks/2.0.1" # or wherever it is
+export SPROUT_FLEX_3_SDK="/Applications/Adobe\ Flex\ Builder\ 3/sdks/3.2.0" # same
+export SPROUT_FLEX_4_SDK="/Applications/Adobe\ Flex\ Builder\ 3/sdks/4.0.0" # same
+export SPROUT_HOME="/path/to/project-sprouts"
+# -- end ProjectSprouts config -- #
+</code></pre>
+
+This allows you to use your existing Flex SDKs, and to easily contribute to the ProjectSprouts project.
 
 h3. MIT License
 

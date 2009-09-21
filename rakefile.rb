@@ -2,24 +2,21 @@ require 'rubygems'
 require 'rake/clean'
 require 'rake/rdoctask'
 
-FLEX_BUILDER                 = File.expand_path("~/Applications/Flex\ Builder\ 3")
-ENV["SPROUT_FLEX_2_SDK"]     = File.join(FLEX_BUILDER, "sdks/2.0.1")
-ENV["SPROUT_FLEX_3_SDK"]     = File.join(FLEX_BUILDER, "sdks/3.2.0")
-ENV["SPROUT_FLEX_4_SDK"]     = File.expand_path("~/Documents/Development/git/flex/viatropos/trunk")
-ENV["SPROUT_HOME"]           = File.dirname(File.expand_path(__FILE__))
+FLEX_BUILDER                 = "/Applications/Adobe\ Flex\ Builder\ 3"
 PROJECT_NAME                 = 'sprout'
 ARTIFACTS                    = File.expand_path(ENV['CC_BUILD_ARTIFACTS'] || 'pkg')
-PROJECTS                     = ['tools/flashplayer',
+PROJECTS                     = ['sprout',
+                                'tools/flashplayer',
                                 'tools/flex2sdk',
                                 'tools/flex3sdk',
+                                'tools/flex4sdk',
                                 'tools/mtasc',
                                 'tools/swfmill',
                                 'bundles/developer',
                                 'bundles/as2', 
                                 'bundles/as3',
                                 'bundles/flashplayer',
-                                'libraries',
-                                'sprout'
+                                'libraries'
                                 ]
 
 if(File.basename(ARTIFACTS) == 'pkg')
@@ -122,7 +119,7 @@ task :package do
 end
 
 desc "Package #{PROJECTS.join(', ')} sprouts"
-task :package do |t|
+task :package => [:clean] do |t|
   execute_in_each_project("rake package CC_BUILD_ARTIFACTS=#{ARTIFACTS}")
 
   FileUtils.mkdir_p(ARTIFACTS)
@@ -134,12 +131,37 @@ task :package do |t|
   fix_x86_mswin
 end
 
+task :reinstall do |t|
+  execute_in_each_project("rake reinstall CC_BUILD_ARTIFACTS=#{ARTIFACTS}")
+end
+
 task :clean do |t|
   execute_in_each_project("rake clean CC_BUILD_ARTIFACTS=#{ARTIFACTS}")
 end
 
 def gem_suffixes
   return {'darwin' => true, 'mswin32' => true, 'linux' => true, 'x86' => true}
+end
+
+##########################
+# Specific helper raketasks
+
+def install_gem(project)
+  execute_in_project(project, "rake reinstall CC_BUILD_ARTIFACTS=#{ARTIFACTS}")
+end
+
+namespace :install do
+  
+  desc "Install the Flex 4 SDK"
+  task :flex4sdk do |t|
+    install_gem("tools/flex4sdk")
+  end
+  
+  desc "Install Sprout Library"
+  task :sprout do |t|
+    install_gem("sprout")
+  end
+  
 end
 
 ##########################

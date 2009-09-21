@@ -389,6 +389,7 @@ EOF
     def self.load_gem(args)
       # This must use a 'system' call because RubyGems
       # sends an 'exit'?
+      puts "load_gem: " + caller.join("\n")
       system("#{get_gem_preamble} #{args}")
     end
     

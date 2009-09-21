@@ -115,7 +115,6 @@ end
 
 CLEAN.add('rdoc')
 
-
 require File.dirname(__FILE__) + '/script/build_helpers'
 
 def fix_x86_mswin
@@ -129,11 +128,6 @@ end
 
 task :package do
   fix_x86_mswin
-end
-
-desc "Install the gem locally"
-task :install => [:package] do
-  sh %{sudo gem install pkg/sprout-#{GEM_VERSION}}
 end
 
 #task :release => :release_rubyforge

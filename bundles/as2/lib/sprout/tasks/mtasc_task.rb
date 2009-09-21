@@ -209,6 +209,7 @@ EOF
     end
 
     def define # :nodoc:
+      puts "mtasc_task!!! " + caller.join("\n")
       super
       resolve_skin
       self.swf = out unless swf

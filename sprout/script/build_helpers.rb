@@ -85,11 +85,18 @@ task :increment_revision do
   end
 end
 
-desc "Reinstall this gem"
-task :reinstall do |t|
-  gem_system "uninstall #{NAME}"
-  system "rake clean package"
+desc "Install the gem locally"
+task :install => [:package] do
   gem_system "install -f pkg/#{NAME}-#{GEM_VERSION}.gem"
+end
+
+desc "Reinstall this gem"
+task :reinstall => [:uninstall, :install]
+
+desc "Uninstall this gem"
+task :uninstall do |t|
+  gem_system "uninstall #{NAME}"
+  system "rake clean"
 end
 
 def gem_system command

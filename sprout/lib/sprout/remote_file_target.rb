@@ -60,7 +60,10 @@ module Sprout
       # Wanted to raise, but it seems we support RemoteFileTargets that are actually self-installed binaries...
       # like SWFMill on Linux. @see the BuilderTest.test_build_no_install for more info.
       # raise RemoteFileTargetError.new('Cannot retrieve a RemoteFileTarget without a url') if url.nil?
-      puts "RESOLVE: environment_path = " + environment_path.to_s
+      puts "RESOLVE: environment_path = " + ENV[environment].to_s + " FILE? " + File.exists?(ENV[environment]).to_s
+      puts "environment: " + environment.to_s
+      puts "environment.path? " + environment_path.to_s
+      puts "FLEX? " + ENV["SPROUT_FLEX_3_SDK"].to_s
       # If we have specified an environment path, then we don't need to download it
       return if (url.nil? || environment_path)
       
