@@ -84,7 +84,7 @@ end
 </code></pre>
 
 _ActionScript 2 Projects:_
-<code><pre>mtasc :debug do |t|
+<pre><code>mtasc :debug do |t|
 	t.main = true
 	t.header = '800:600:24'
 	t.input = 'src/SomeProject.as'
@@ -99,7 +99,7 @@ end
 flashplayer :run do |t|
 	t.swf = 'bin/SomeProject.swf'
 end
-</code></pre>
+</pre></code>
 
 h3. Some Links
 

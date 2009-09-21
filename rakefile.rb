@@ -63,6 +63,8 @@ def add_tool(file, clazz)
   task :rdoc => doc_file
 end
 
+# Commented this out because it causes things to be installed before we want them to
+=begin
 $:.push(File.dirname(__FILE__) + '/sprout/lib')
 $:.push(File.dirname(__FILE__) + '/bundles/as2/lib')
 $:.push(File.dirname(__FILE__) + '/bundles/as3/lib')
@@ -79,6 +81,7 @@ add_tool(File.dirname(__FILE__) + '/bundles/as3/lib/sprout/tasks/compc_task.rb',
 add_tool(File.dirname(__FILE__) + '/bundles/as3/lib/sprout/tasks/adl.rb', Sprout::ADLTask)
 add_tool(File.dirname(__FILE__) + '/bundles/as3/lib/sprout/tasks/adt_task.rb', Sprout::ADTTask)
 add_tool(File.dirname(__FILE__) + '/bundles/as3/lib/sprout/tasks/adt_cert_task.rb', Sprout::ADTCertTask)
+=end
 
 def execute_in_each_project(str)
   PROJECTS.each do |p|
@@ -152,9 +155,14 @@ end
 
 namespace :install do
   
-  desc "Install the Flex 4 SDK"
+  desc "Install Flex 4 SDK"
   task :flex4sdk do |t|
     install_gem("tools/flex4sdk")
+  end
+  
+  desc "Install Flex 3 SDK"
+  task :flex3sdk do |t|
+    install_gem("tools/flex3sdk")
   end
   
   desc "Install Sprout Library"
