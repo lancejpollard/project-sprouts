@@ -22,7 +22,7 @@ module Sprout # :nodoc:
     def initialize(args, &block)
       super
       
-      asdoc task_name do |t|
+      asdoc "#{task_name}:#{output}" do |t|
         configure_mxmlc(t, true)
         t.output = model.doc_dir
         t.doc_classes = input

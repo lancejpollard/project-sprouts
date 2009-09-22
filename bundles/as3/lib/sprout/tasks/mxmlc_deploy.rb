@@ -27,7 +27,7 @@ module Sprout # :nodoc:
       t = define_outer_task
       t.prerequisites << player_task_name
       
-      out_task = mxmlc output do |t|
+      out_task = mxmlc "#{task_name}:#{output}" do |t|
         configure_mxmlc t
         configure_mxmlc_application t
         t.debug               = false

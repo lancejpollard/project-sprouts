@@ -24,7 +24,7 @@ module Sprout # :nodoc:
 
       outer_task = define_outer_task
 
-      mxmlc output do |t|
+      mxmlc "#{task_name}:#{output}" do |t|
         configure_mxmlc t
         configure_mxmlc_application t
         yield t if block_given?

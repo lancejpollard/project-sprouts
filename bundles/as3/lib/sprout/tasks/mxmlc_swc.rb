@@ -23,7 +23,7 @@ module Sprout # :nodoc:
       super
       outer_task = define_outer_task
       
-      compc output do |t|
+      compc "#{task_name}:#{output}" do |t|
         configure_mxmlc t
         configure_mxmlc_application t
         t.input = input
