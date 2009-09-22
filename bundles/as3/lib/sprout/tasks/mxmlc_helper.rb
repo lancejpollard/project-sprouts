@@ -10,14 +10,17 @@ module Sprout # :nodoc:
       @model = get_model args
     end
     
+    # The output file from the compiler
     def output
       return @output ||= create_output
     end
     
+    # The source file inputted to the compiler
     def input
       return @input ||= create_input
     end
-
+    
+    # The name of the task
     def task_name
       return @task_name
     end
@@ -52,6 +55,8 @@ module Sprout # :nodoc:
       end
     end
     
+    # Configures the compiler variables, such as where the
+    # library_paths are and the source paths
     def configure_mxmlc(compiler, is_asdoc=false)
       if(!is_asdoc)
         compiler.input       = input
@@ -86,6 +91,7 @@ module Sprout # :nodoc:
 
     end
     
+    # Configures application-compiler variables, such as the frame rate, warnings, etc.
     def configure_mxmlc_application(compiler)
       compiler.warnings                 = true
       compiler.verbose_stacktraces      = true
@@ -96,13 +102,16 @@ module Sprout # :nodoc:
       end
     end
     
+    # called by the MXMLCDebug task, and others,
+    # that need to use the flash player after the application is compiled
     def define_player(compiler = nil)
       if model.use_fdb
         define_fdb
       else
         flashplayer player_task_name do |t|
           t.swf = output_file
-          if !(compiler.nil? and !compiler.trace_output.nil?)
+          # proxies the trace output block to the flash_player task
+          if !compiler.nil? and !compiler.trace_output.nil?
             t.trace_output = compiler.trace_output
           end
         end
@@ -145,7 +154,7 @@ module Sprout # :nodoc:
     end
     
     def player_task_name
-      return "run_#{output_file}"
+      return "run:#{task_name}:#{output_file}"
     end
   
     def create_input

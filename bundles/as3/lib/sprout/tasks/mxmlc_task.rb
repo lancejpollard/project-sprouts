@@ -75,6 +75,9 @@ module Sprout
     # end
     attr_accessor :trace_output
     
+    # Handles tracing output from the flash player.
+    #
+    # Pass it a block, as described in :trace_output
     def trace(to = nil, &block)
       @trace_output = block if block_given?
     end
@@ -718,25 +721,25 @@ EOF
     def define # :nodoc:
       super
 
-      if(!output)
-        if(name.match(/.swf/) || name.match(/swc/))
+      if (!output)
+        if (name.match(/.swf/) || name.match(/swc/))
           self.output = name
         end
       end
       
-      if(input && !input.match(/.css/) && File.exists?(input))
+      if (input && !input.match(/.css/) && File.exists?(input))
         source_path << File.dirname(input)
       end
       
-      if(include_path)
+      if (include_path)
         include_path.each do |path|
-          process_include_path(path) if(File.directory?(path))
+          process_include_path(path) if (File.directory?(path))
         end
       end
       
       self.include_path = []
       
-      if(link_report)
+      if (link_report)
         CLEAN.add(link_report)
       end
       
@@ -744,7 +747,7 @@ EOF
       param_hash['source_path'].value = clean_nested_source_paths(source_path)
       
       CLEAN.add(output)
-      if(incremental)
+      if (incremental)
         CLEAN.add(FileList['**/**/*.cache'])
       end
 
@@ -774,7 +777,7 @@ EOF
     def clean_nested_source_paths(paths)
       results = []
       paths.each do |path|
-        if(check_nested_source_path(results, path))
+        if (check_nested_source_path(results, path))
           results << path
         end
       end
@@ -784,9 +787,9 @@ EOF
     def check_nested_source_path(array, path)
       array.each_index do |index|
         item = array[index]
-        if(item =~ /^#{path}/)
+        if (item =~ /^#{path}/)
           array.slice!(index, 1)
-        elsif(path =~ /^#{item}/)
+        elsif (path =~ /^#{item}/)
           return false
         end
       end
@@ -799,7 +802,7 @@ EOF
       #TODO: Add support for libraries that don't get
       # copied into the project
       path = library_task.project_path
-      if(path.match(/.swc$/))
+      if (path.match(/.swc$/))
         library_path << library_task.project_path
       else
         source_path << library_task.project_path
@@ -820,13 +823,13 @@ EOF
     
     def execute(*args)
       begin
-        if(@use_fcsh)
+        if (@use_fcsh)
           execute_with_fcsh(to_shell)
         else
           super
         end
       rescue ExecutionError => e
-        if(e.message.index('Warning:'))
+        if (e.message.index('Warning:'))
           # MXMLC sends warnings to stderr....
           Log.puts(e.message.gsub('[ERROR]', '[WARNING]'))
         else

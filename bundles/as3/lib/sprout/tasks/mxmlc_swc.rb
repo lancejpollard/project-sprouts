@@ -30,7 +30,7 @@ module Sprout # :nodoc:
         yield t if block_given?
       end
 
-      outer_task.prerequisites << output
+      outer_task.prerequisites << "#{task_name}:#{output}"
       return outer_task
     end
 

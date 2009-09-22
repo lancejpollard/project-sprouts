@@ -31,7 +31,7 @@ module Sprout # :nodoc:
         define_player t
       end
       
-      outer_task.prerequisites << output
+      outer_task.prerequisites << "#{task_name}:#{output}"
       outer_task.prerequisites << player_task_name
     end
     
