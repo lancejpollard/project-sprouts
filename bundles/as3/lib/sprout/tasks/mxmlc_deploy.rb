@@ -35,7 +35,7 @@ module Sprout # :nodoc:
         t.warnings            = false
         t.verbose_stacktraces = false
         
-        block.call t if !block.nil?
+        yield t if block_given?
       end
       
       task player_task_name => output
